@@ -12,7 +12,8 @@ import org.springframework.http.HttpStatusCode;
 @AllArgsConstructor
 public enum AuthenticationErrorCode implements IErrorCode{
     // Error mention authentication: Variable of error code(code, message - describe detail of error, http status code)
-    UNAUTHENTICATED(1001, "Unauthenticated", HttpStatus.UNAUTHORIZED)
+    UNAUTHENTICATED(1001, "Unauthenticated", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED(1002, "Unauthorized", HttpStatus.FORBIDDEN),
     ;
     private int code;
     private String message;

@@ -1,0 +1,26 @@
+#spring.application.name=bill-management
+server:
+  port: 8082
+  servlet:
+    context-path: "/bill-management"
+spring:
+  application:
+    name: "bill-management"
+  datasource:
+    url: 'jdbc:mysql://localhost:3306/bill-management'
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  # signature is generated in https://generate-random.org/encryption-key-generator?count=1&bytes=32&cipher=aes-256-cbc&string=&password=
+  # with 32 bytes
+  signer-key: "0eOPQ+UkuUGySUMc6raXHEUh0gTIAs8hzls6EJqbyD2Vlzjg/mOkF1P55Jl7I7HC"
+
+time:
+  expiry:
+    access-token: 3600 # in seconds
+    refresh-token: 36000 # in seconds

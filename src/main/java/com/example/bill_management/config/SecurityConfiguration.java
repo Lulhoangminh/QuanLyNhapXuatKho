@@ -24,7 +24,7 @@ import java.util.List;
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-    private final AuthenticationProvider authenticationProvider;
+//    private final AuthenticationProvider authenticationProvider;
     private final MyAccessDeniedHandler myAccessDeniedHandler;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                         )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exception -> exception.accessDeniedHandler(myAccessDeniedHandler))
-                .authenticationProvider(authenticationProvider)
+//                .authenticationProvider(authenticationProvider)
 //                .addFilterBefore()
         ;
 

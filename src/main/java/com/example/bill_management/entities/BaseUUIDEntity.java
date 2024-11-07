@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @MappedSuperclass
-public class IdentityEntity {
+public class BaseUUIDEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 }

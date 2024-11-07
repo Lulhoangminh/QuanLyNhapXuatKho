@@ -7,25 +7,25 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
 @Component
-public class MyAccessDeniedHandler implements AccessDeniedHandler {
+public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        ECAuthentication authenticationErrorCode = ECAuthentication.UNAUTHENTICATED;
         ObjectMapper objectMapper = new ObjectMapper();
-        ECAuthentication errorCode = ECAuthentication.UNAUTHORIZED;
-
         ApiResponse<?> apiResponse = ApiResponse.builder()
-                .code(errorCode.getCode())
-                .message(errorCode.getMessage())
+                .code(authenticationErrorCode.getCode())
+                .message(authenticationErrorCode.getMessage())
+                .path(request.getRequestURI())
                 .build();
-
-        response.setStatus(errorCode.getHttpStatusCode().value());
+        response.setStatus(authenticationErrorCode.getHttpStatusCode().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
         response.flushBuffer();

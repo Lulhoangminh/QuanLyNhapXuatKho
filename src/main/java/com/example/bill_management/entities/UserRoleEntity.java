@@ -1,6 +1,5 @@
 package com.example.bill_management.entities;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +8,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Role extends IdentityEntity {
-    @Column(nullable = false, unique = true, name = "name")
-    private String name;
+public class UserRoleEntity extends BaseIdEntity {
+    private String userId;
+    private Long roleId;
 }

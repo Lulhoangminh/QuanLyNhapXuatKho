@@ -7,9 +7,9 @@ spring:
   application:
     name: "bill-management"
   datasource:
-    url: 'jdbc:mysql://localhost:3306/bill-management'
+    url: 'postgresql://root:DlFzD87kCoICSJbWQNaQeFlJ2zfoPflh@dpg-csuqsiij1k6c738iooig-a.singapore-postgres.render.com/bill_management_498h'
     username: root
-    password: root
+    password: DlFzD87kCoICSJbWQNaQeFlJ2zfoPflh
   jpa:
     hibernate:
       ddl-auto: update

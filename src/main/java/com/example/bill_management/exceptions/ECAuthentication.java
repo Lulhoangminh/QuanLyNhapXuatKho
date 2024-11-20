@@ -13,6 +13,7 @@ public enum ECAuthentication implements IErrorCode{
     // Error mention authentication: Variable of error code(code, message - describe detail of error, http status code)
     UNAUTHENTICATED(1001, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1002, "Unauthorized", HttpStatus.FORBIDDEN),
+    USERNAME_OR_PASSWORD_IS_WRONG(1003, "Username or Password is incorrect", HttpStatus.BAD_REQUEST),
     ;
     private int code;
     private String message;

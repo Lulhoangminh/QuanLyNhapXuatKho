@@ -38,7 +38,9 @@ public class UserUtil {
         UserEntity user = new UserEntity(
                 request.getName(),
                 request.getUsername(),
-                passwordEncoder.encode(request.getPassword())
+                passwordEncoder.encode(request.getPassword()),
+                request.isDeleted(),
+                null
         );
         // saving user info
         userRepository.save(user);

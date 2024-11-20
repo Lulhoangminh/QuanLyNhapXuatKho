@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.catalina.filters.CorsFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.Customizer;
@@ -41,11 +42,12 @@ public class SecurityConfiguration {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry
-
+                                // Endpoints allow users with role
+                                .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                                .requestMatchers("/api/storages").hasRole("ADMIN")
+                                .requestMatchers("/api/storages/**").hasRole("ADMIN")
                                 // Endpoints allow all users accessing.
                                 .requestMatchers("/api/**").permitAll()
-
-                                // Endpoints allow users with role
 
                                 // Remaining endpoints
                                 .anyRequest()

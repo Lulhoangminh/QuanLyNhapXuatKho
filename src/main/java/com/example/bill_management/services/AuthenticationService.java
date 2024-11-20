@@ -16,20 +16,31 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private JwtService jwtService;
 
     public AuthenticationResponse login(AuthenticationRequest request){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        UserEntity user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new AppException(ECUser.NONEXISTENT_USER));
 
+        // find the user
+        UserEntity user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new AppException(ECAuthentication.USERNAME_OR_PASSWORD_IS_WRONG));
+
+        // CHECK account is deleted ?
+        if (user.isDeleted()){
+            throw new AppException(ECUser.NONEXISTENT_USER);
+        }
+
+        // check password is correct ?
         boolean isValidPassword = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!isValidPassword){
-            throw new AppException(ECAuthentication.UNAUTHENTICATED);
+            throw new AppException(ECAuthentication.USERNAME_OR_PASSWORD_IS_WRONG);
         }
 
         return AuthenticationResponse.builder()
                 .isValid(true)
-                .message("Login Success")
+                .accessToken(jwtService.getAccessToken(user))
+                .refreshToken(jwtService.getRefreshToken(user))
                 .build();
     }
 }

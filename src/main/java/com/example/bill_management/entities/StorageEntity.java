@@ -4,17 +4,18 @@ import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
-@Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class UserEntity extends BaseUUIDEntity{
+@Data
+@RequiredArgsConstructor
+public class StorageEntity extends BaseIdEntity {
+    private String address;
     private String name;
-    private String username;
-    private String password;
+    private LocalDate createdDate;
     private boolean isDeleted;
-    private LocalDate deleteDate;
+    private LocalDate deletedDate;
 }

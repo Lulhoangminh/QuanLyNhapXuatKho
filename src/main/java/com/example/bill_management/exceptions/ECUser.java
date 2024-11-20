@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatusCode;
 public enum ECUser implements IErrorCode{
     EXISTENT_USER(1001, "User is existed", HttpStatus.BAD_REQUEST),
     NONEXISTENT_USER(1002, "User is not existed", HttpStatus.BAD_REQUEST),
+    DELETED_USER(1003, "User is deleted", HttpStatus.BAD_REQUEST),
+    WARNING_ADMIN_ID_IS_DELETED(1004, "Admin id is not chosen for deleting", HttpStatus.BAD_REQUEST)
     ;
     private int code;
     private String message;

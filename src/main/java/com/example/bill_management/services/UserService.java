@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.parser.Entity;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -65,8 +67,16 @@ public class UserService {
 
     public Void deleteUser(String id){
         UserEntity user = userRepository.findById(id).orElseThrow(() -> new AppException(ECUser.NONEXISTENT_USER));
-        userRoleRepository.deleteByUserId(user.getId());
-        userRepository.deleteById(user.getId());
+//        userRoleRepository.deleteByUserId(user.getId());
+//        userRepository.deleteById(user.getId());
+
+        if (user.getUsername().equals("admin")){
+            throw new AppException(ECUser.WARNING_ADMIN_ID_IS_DELETED);
+        }
+
+        user.setDeleted(true);
+        user.setDeleteDate(LocalDate.now());
+        userRepository.save(user);
         return null;
     }
 }

@@ -6,13 +6,22 @@ server:
 spring:
   application:
     name: "bill-management"
+#  name: bill_management_498h
   datasource:
-    url: 'postgresql://root:DlFzD87kCoICSJbWQNaQeFlJ2zfoPflh@dpg-csuqsiij1k6c738iooig-a.singapore-postgres.render.com/bill_management_498h'
+    url: 'jdbc:mysql://localhost:3306/bill-management'
     username: root
-    password: DlFzD87kCoICSJbWQNaQeFlJ2zfoPflh
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+#    url: jdbc:postgresql://dpg-csuqsiij1k6c738iooig-a.singapore-postgres.render.com:5432/bill_management_498h
+#    username: root
+#    password: DlFzD87kCoICSJbWQNaQeFlJ2zfoPflh
+#    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
+      dialect: org.hibernate.dialect.MySQLDialect
+#      dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
 jwt:

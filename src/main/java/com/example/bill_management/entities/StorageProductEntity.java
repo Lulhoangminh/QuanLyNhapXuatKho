@@ -8,7 +8,11 @@ import lombok.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class StorageProductEntity extends BaseIdEntity{
-    private String product_id;
-    private String storage_id;
+    private String productId;
+    private Long storageId;
     private Long inventory;
+
+    public void addToInventory(Long quantity){
+        this.inventory = ((this.inventory == null) ? 0 : this.inventory) + quantity;
+    }
 }

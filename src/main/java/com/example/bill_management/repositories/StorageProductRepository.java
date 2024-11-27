@@ -25,4 +25,11 @@ public interface StorageProductRepository extends JpaRepository<StorageProductEn
     @Query("SELECT sp FROM StorageProductEntity sp WHERE sp.productId = :productId AND sp.storageId = :storageId")
     Optional<StorageProductEntity> findByProductIdAndStorageId(@Param("storageId") Long storageId,
                                                                 @Param("productId") String productId);
+
+    @Query("SELECT sp FROM StorageProductEntity sp WHERE sp.storageId = :storageId")
+    List<StorageProductEntity> findAllByStorageId(@Param("storageId") Long storageId);
+
+    @Query("SELECT sp FROM StorageProductEntity sp WHERE sp.productId = :productId")
+    List<StorageProductEntity> findAllByProductId(@Param("productId") String productId);
+
 }

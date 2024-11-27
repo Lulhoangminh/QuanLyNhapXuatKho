@@ -15,4 +15,8 @@ public class StorageProductEntity extends BaseIdEntity{
     public void addToInventory(Long quantity){
         this.inventory = ((this.inventory == null) ? 0 : this.inventory) + quantity;
     }
+
+    public void dispatchProduct(Long quantity){
+        this.inventory = ((this.inventory < quantity) ? 0 : this.inventory - quantity);
+    }
 }

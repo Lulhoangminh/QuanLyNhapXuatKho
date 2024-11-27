@@ -1,8 +1,12 @@
 package com.example.bill_management.services;
 
 import com.example.bill_management.dto.requests.AddProductToStorageRequest;
-import com.example.bill_management.dto.responses.ProductResponse;
+import com.example.bill_management.dto.requests.ChangeProductHistoryRequest;
+import com.example.bill_management.dto.requests.UpdateAmountRequest;
+import com.example.bill_management.dto.requests.UpdateInventoryRequest;
+import com.example.bill_management.dto.responses.AmountProductResponse;
 import com.example.bill_management.dto.responses.StorageProductResponse;
+import com.example.bill_management.entities.ChangeProductHistoryEntity;
 import com.example.bill_management.entities.ProductEntity;
 import com.example.bill_management.entities.StorageEntity;
 import com.example.bill_management.entities.StorageProductEntity;
@@ -12,9 +16,11 @@ import com.example.bill_management.repositories.ProductRepository;
 import com.example.bill_management.repositories.StorageProductRepository;
 import com.example.bill_management.repositories.StorageRepository;
 import com.example.bill_management.util.StorageProductUtil;
-import org.hibernate.annotations.NaturalId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 public class StorageProductService {
@@ -26,6 +32,8 @@ public class StorageProductService {
     private ProductRepository productRepository;
     @Autowired
     private StorageProductUtil storageProductUtil;
+    @Autowired
+    private ChangeProductHistoryService changeProductHistoryService;
 
     public StorageProductResponse addProductToStorage(Long storageId, AddProductToStorageRequest request){
         if (request.getQuantity() == null){
@@ -44,7 +52,68 @@ public class StorageProductService {
             storageProductEntity.setStorageId(storageId);
         }
         storageProductEntity.addToInventory(request.getQuantity());
+
+        changeProductHistoryService.saveProductHistory(new ChangeProductHistoryRequest(
+                storageId,
+                product.getId(),
+                "INPUT",
+                request.getQuantity(),
+                LocalDate.now()
+        ));
         return storageProductUtil.toStorageProductResponse(storageProductRepository.save(storageProductEntity));
     }
 
+    public Void deleteProductFromStorage(Long storageId, String productId){
+
+        return null;
+    }
+
+    public StorageProductResponse addInventoryProductToStorage(Long storageId, String productId, UpdateAmountRequest request){
+        StorageProductEntity storageProduct = storageProductRepository.findByProductIdAndStorageId(storageId, productId).orElseThrow(() -> new AppException(ECProductsStorage.PRODUCT_IS_NOT_IN_STORAGE));
+        storageProduct.addToInventory(request.getAmount());
+        return storageProductUtil.toStorageProductResponse(storageProductRepository.save(storageProduct));
+    }
+
+    public Void dispatchProductFromStorage(Long storageId, String productId, UpdateAmountRequest request){
+        StorageProductEntity storageProduct = storageProductRepository.findByProductIdAndStorageId(storageId, productId).orElseThrow(() -> new AppException(ECProductsStorage.PRODUCT_IS_NOT_IN_STORAGE));
+        storageProduct.dispatchProduct(request.getAmount());
+        return null;
+
+    }
+
+    public StorageProductResponse updateInventoryInStorage(Long storageId, String productId, UpdateInventoryRequest request){
+        StorageProductEntity storageProduct = storageProductRepository.findByProductIdAndStorageId(storageId, productId).orElseThrow(() -> new AppException(ECProductsStorage.PRODUCT_IS_NOT_IN_STORAGE));
+        storageProduct.setInventory(request.getInventory());
+        return storageProductUtil.toStorageProductResponse(storageProductRepository.save(storageProduct));
+    }
+
+    public List<StorageProductResponse> getAllProductsInStorage(Long storageId){
+        if (!storageRepository.existsById(storageId)){
+            throw new AppException(ECProductsStorage.NONEXISTENT_STORAGE_ID);
+        }
+        List<StorageProductEntity> storageProductEntityList = storageProductRepository.findAllByStorageId(storageId);
+        return storageProductEntityList.stream()
+                .map(sp -> storageProductUtil.toStorageProductResponse(sp))
+                .toList();
+    }
+
+    public List<StorageProductResponse> getAllStoragesHaveProduct(String productId){
+        if (!productRepository.existsById(productId)){
+            throw new AppException(ECProductsStorage.NONEXISTENT_PRODUCT_ID);
+        }
+        List<StorageProductEntity> storageProductEntityList = storageProductRepository.findAllByProductId(productId);
+        return storageProductEntityList.stream()
+                .map(sp -> storageProductUtil.toStorageProductResponse(sp))
+                .toList();
+    }
+
+    public AmountProductResponse<Long> getInventory(Long storageId, String productId){
+        StorageProductEntity storageProduct = storageProductRepository.findByProductIdAndStorageId(storageId, productId).orElseThrow(() -> new AppException(ECProductsStorage.PRODUCT_IS_NOT_IN_STORAGE));
+        return AmountProductResponse.<Long> builder()
+                .storageId(storageId)
+                .productId(productId)
+                .amountName("inventory")
+                .amount(storageProduct.getInventory())
+                .build();
+    }
 }

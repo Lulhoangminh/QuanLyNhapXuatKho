@@ -1,10 +1,8 @@
 package com.example.bill_management.controllers;
 
-import com.example.bill_management.dto.requests.ProductCreationRequest;
-import com.example.bill_management.dto.requests.ProductUpdateRequest;
+import com.example.bill_management.dto.requests.ProductRequest;
 import com.example.bill_management.dto.responses.ApiResponse;
 import com.example.bill_management.dto.responses.ProductResponse;
-import com.example.bill_management.entities.ProductEntity;
 import com.example.bill_management.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +16,7 @@ public class ProductController {
     private ProductService productService;
 
     @PostMapping
-    ApiResponse<ProductResponse> createProduct(@RequestBody ProductCreationRequest request){
+    ApiResponse<ProductResponse> createProduct(@RequestBody ProductRequest request){
         return ApiResponse.<ProductResponse>builder()
                 .result(productService.createProduct(request))
                 .build();
@@ -39,7 +37,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    ApiResponse<ProductResponse> updateProduct(@PathVariable("id") String id, @RequestBody ProductUpdateRequest request){
+    ApiResponse<ProductResponse> updateProduct(@PathVariable("id") String id, @RequestBody ProductRequest request){
         return ApiResponse.<ProductResponse>builder()
                 .result(productService.updateProduct(id, request))
                 .build();

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 @Data
 @Builder
-public class StorageCreationRequest {
+public class StorageRequest {
     private String name;
 
     private String address;

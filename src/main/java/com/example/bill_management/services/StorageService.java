@@ -1,8 +1,7 @@
 package com.example.bill_management.services;
 
 
-import com.example.bill_management.dto.requests.StorageCreationRequest;
-import com.example.bill_management.dto.requests.StorageUpdateRequest;
+import com.example.bill_management.dto.requests.StorageRequest;
 import com.example.bill_management.dto.responses.StorageResponse;
 import com.example.bill_management.entities.StorageEntity;
 import com.example.bill_management.exceptions.AppException;
@@ -22,7 +21,7 @@ public class StorageService {
     private StorageRepository storageRepository;
     @Autowired
     private StorageUtil storageUtil;
-    public StorageResponse createStorage(StorageCreationRequest request){
+    public StorageResponse createStorage(StorageRequest request){
         return storageUtil.createStorage(request);
     }
 
@@ -39,7 +38,7 @@ public class StorageService {
         );
     }
 
-    public StorageResponse updateStorage(Long id, StorageUpdateRequest request){
+    public StorageResponse updateStorage(Long id, StorageRequest request){
         StorageEntity storage = storageRepository.findById(id).orElseThrow(() -> new AppException(ECProductsStorage.NONEXISTENT_STORAGE_ID));
         storage.setName(request.getName());
         storage.setAddress(request.getAddress());

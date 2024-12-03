@@ -12,6 +12,8 @@ import lombok.*;
 public class AmountProductResponse<T> {
     private String productId;
     private Long storageId;
+    private String productName;
+    private String storageName;
     private String amountName;
     private T amount;
 }

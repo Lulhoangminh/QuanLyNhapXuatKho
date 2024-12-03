@@ -26,7 +26,13 @@ public class ChangeProductHistoryService {
                 request.getType(),
                 request.getCreatedDate()).orElse(new ChangeProductHistoryEntity());
         if (changeProductHistoryEntity.getProductId() != null && changeProductHistoryEntity.getStorageId() != null){
-            changeProductHistoryEntity.addAmount(request.getAmount());
+            if (!changeProductHistoryEntity.getType().equals("UPDATE")){
+                changeProductHistoryEntity.addAmount(request.getAmount());
+            }
+            // history of "update" activity do not need to increase the amount.
+            else{
+                changeProductHistoryEntity.setAmount(request.getAmount());
+            }
         }
         else{
             changeProductHistoryEntity.setProductId(request.getProductId());
@@ -35,8 +41,6 @@ public class ChangeProductHistoryService {
             changeProductHistoryEntity.setCreatedDate(request.getCreatedDate());
             changeProductHistoryEntity.setAmount(request.getAmount());
         }
-//        changeProductHistory.addAmount(entity.getAmount());
-
         changeProductHistoryRepository.save(changeProductHistoryEntity);
     }
 }

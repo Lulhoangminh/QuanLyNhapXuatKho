@@ -1,10 +1,14 @@
 package com.example.bill_management.dto.requests;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
 @Data
+@AllArgsConstructor
+@RequiredArgsConstructor
+@Builder
 public class UpdateInventoryRequest {
     private Long inventory;
 }

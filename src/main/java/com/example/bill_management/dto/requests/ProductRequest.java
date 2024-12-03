@@ -1,7 +1,9 @@
 package com.example.bill_management.dto.requests;
 
-import lombok.*;
-import org.springframework.cglib.core.Local;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 
@@ -9,7 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
-public class ProductCreationRequest {
+public class ProductRequest {
     private String id;
 
     private String name;

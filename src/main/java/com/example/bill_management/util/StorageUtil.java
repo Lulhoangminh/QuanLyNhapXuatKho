@@ -1,6 +1,6 @@
 package com.example.bill_management.util;
 
-import com.example.bill_management.dto.requests.StorageCreationRequest;
+import com.example.bill_management.dto.requests.StorageRequest;
 import com.example.bill_management.dto.responses.StorageResponse;
 import com.example.bill_management.entities.StorageEntity;
 import com.example.bill_management.repositories.StorageRepository;
@@ -12,7 +12,7 @@ public class StorageUtil {
     @Autowired
     private StorageRepository storageRepository;
 
-    public StorageResponse createStorage(StorageCreationRequest request){
+    public StorageResponse createStorage(StorageRequest request){
         StorageEntity storage = new StorageEntity();
         storage.setName(request.getName());
         storage.setAddress(request.getAddress());

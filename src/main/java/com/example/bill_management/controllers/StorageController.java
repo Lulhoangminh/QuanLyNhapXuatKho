@@ -1,7 +1,6 @@
 package com.example.bill_management.controllers;
 
-import com.example.bill_management.dto.requests.StorageCreationRequest;
-import com.example.bill_management.dto.requests.StorageUpdateRequest;
+import com.example.bill_management.dto.requests.StorageRequest;
 import com.example.bill_management.dto.responses.ApiResponse;
 import com.example.bill_management.dto.responses.StorageResponse;
 import com.example.bill_management.services.StorageService;
@@ -17,7 +16,7 @@ public class StorageController {
     private StorageService storageService;
 
     @PostMapping
-    ApiResponse<StorageResponse> createStorage(@RequestBody StorageCreationRequest request){
+    ApiResponse<StorageResponse> createStorage(@RequestBody StorageRequest request){
         return ApiResponse.<StorageResponse>builder()
                 .result(storageService.createStorage(request))
                 .build();
@@ -38,7 +37,7 @@ public class StorageController {
     }
 
     @PutMapping("/{id}")
-    ApiResponse<StorageResponse> updateStorage(@PathVariable("id") Long id, @RequestBody StorageUpdateRequest request){
+    ApiResponse<StorageResponse> updateStorage(@PathVariable("id") Long id, @RequestBody StorageRequest request){
         return ApiResponse.<StorageResponse>builder()
                 .result(storageService.updateStorage(id, request))
                 .build();

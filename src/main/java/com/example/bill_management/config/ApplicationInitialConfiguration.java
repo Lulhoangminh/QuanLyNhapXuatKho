@@ -1,12 +1,12 @@
 package com.example.bill_management.config;
 
-import com.example.bill_management.dto.requests.UserCreationRequest;
+import com.example.bill_management.dto.requests.UserRequest;
 import com.example.bill_management.entities.RoleEntity;
 import com.example.bill_management.entities.UserEntity;
 import com.example.bill_management.enums.RoleEnum;
 import com.example.bill_management.repositories.RoleRepository;
 import com.example.bill_management.repositories.UserRepository;
-import com.example.bill_management.util.UserUtil;
+import com.example.bill_management.services.factory.UserFactory;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +21,8 @@ public class ApplicationInitialConfiguration {
     private RoleRepository roleRepository;
     @Autowired
     private UserUtil userUtil;
+    @Autowired
+    private UserFactory userFactory;
 
     // @PostConstruct: Annotation này đánh dấu phương thức initialize() để nó được gọi tự động ngay sau khi
     // Spring hoàn tất quá trình khởi tạo các thành phần trong ngữ cảnh ứng dụng.
@@ -51,14 +53,15 @@ public class ApplicationInitialConfiguration {
         if (userRepository.existsByUsername("admin")){
             return;
         }
-        new UserCreationRequest();
-        UserCreationRequest adminCreationRequest = UserCreationRequest.builder()
+        new UserRequest();
+        UserRequest adminCreationRequest = UserRequest.builder()
                 .username("admin")
                 .password("admin")
                 .isDeleted(false)
                 .name("ADMIN")
                 .build();
-        userUtil.createUserWithRole(adminCreationRequest, "ADMIN");
+        UserEntity admin = userFactory.createNewFromRequest(adminCreationRequest);
+        userFactory.createUserRole(admin.getId(), RoleEnum.ADMIN.name());
         return;
     }
 }

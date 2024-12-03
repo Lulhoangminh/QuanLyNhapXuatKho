@@ -46,4 +46,14 @@ public interface UserRoleRepository extends JpaRepository<UserRoleEntity, Long> 
     @Transactional
     @Query("DELETE FROM UserRoleEntity ur WHERE ur.userId = :userId")
     void deleteByUserId(@Param("userId")String userId);
+
+    @Query("""
+            SELECT CASE
+                WHEN r.name = "ADMIN" THEN true
+                    ELSE false
+                END
+            FROM RoleEntity r JOIN UserRoleEntity ur on r.id = ur.roleId
+            WHERE ur.userId = :userId
+            """)
+    boolean isAdminTargeted (@Param("userId") String userId);
 }

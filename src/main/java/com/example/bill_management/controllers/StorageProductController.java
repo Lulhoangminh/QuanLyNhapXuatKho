@@ -44,15 +44,15 @@ public class StorageProductController {
 
     // Dispatch goods
     @PutMapping("/storages/{storageId}/products/{productId}/dispatch")
-    ApiResponse<Void> dispatchProductsFromStorage(@PathVariable("storageId") Long storageId, @PathVariable("productId") String productId, @RequestBody UpdateAmountRequest request){
-        return ApiResponse.<Void> builder()
+    ApiResponse<StorageProductResponse> dispatchProductsFromStorage(@PathVariable("storageId") Long storageId, @PathVariable("productId") String productId, @RequestBody UpdateAmountRequest request){
+        return ApiResponse.<StorageProductResponse> builder()
                 .result(storageProductService.dispatchProductFromStorage(storageId, productId, request))
                 .build();
     }
 
     // Update the inventory of the product in 1 storage
     @PutMapping("/storages/{storageId}/products/{productId}")
-    ApiResponse<StorageProductResponse> updateInventoryInStorage(@PathVariable("storageId") Long storageId, @PathVariable("productId") String productId, UpdateInventoryRequest request){
+    ApiResponse<StorageProductResponse> updateInventoryInStorage(@PathVariable("storageId") Long storageId, @PathVariable("productId") String productId, @RequestBody UpdateInventoryRequest request){
         return ApiResponse.<StorageProductResponse>builder()
                 .result(storageProductService.updateInventoryInStorage(storageId, productId, request))
                 .build();

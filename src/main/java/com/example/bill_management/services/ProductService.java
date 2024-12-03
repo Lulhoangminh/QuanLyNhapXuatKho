@@ -1,13 +1,15 @@
 package com.example.bill_management.services;
 
-import com.example.bill_management.dto.requests.ProductCreationRequest;
-import com.example.bill_management.dto.requests.ProductUpdateRequest;
+import com.example.bill_management.dto.requests.ProductRequest;
 import com.example.bill_management.dto.responses.ProductResponse;
 import com.example.bill_management.entities.ProductEntity;
 import com.example.bill_management.exceptions.AppException;
 import com.example.bill_management.exceptions.ECProductsStorage;
 import com.example.bill_management.repositories.ProductRepository;
+import com.example.bill_management.services.factory.ProductFactory;
 import com.example.bill_management.util.ProductUtil;
+import com.example.bill_management.util.converter.ProductConverter;
+import com.example.bill_management.validator.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,50 +23,41 @@ public class ProductService {
     private ProductRepository productRepository;
     @Autowired
     private ProductUtil productUtil;
+    @Autowired
+    private ProductValidator productValidator;
+    @Autowired
+    private ProductFactory productFactory;
+    @Autowired
+    private ProductConverter productConverter;
 
-    public ProductResponse createProduct(ProductCreationRequest request){
-        if (productRepository.existsById(request.getId())){
-            throw new AppException(ECProductsStorage.EXISTENT_PRODUCT_ID);
-        }
-        ProductEntity product = new ProductEntity();
-        product.setId(request.getId());
-        product.setName(request.getName());
-        product.setUnit(request.getUnit());
-        product.setUnitPrice(request.getUnitPrice());
-        product.setCreatedDate(LocalDate.now());
-        product.setDeleted(request.isDeleted());
+    public ProductResponse createProduct(ProductRequest request){
+        // check existence
+        productValidator.validateExistenceById(request.getId());
 
-        return productUtil.toProductResponse(productRepository.save(product));
+        // create if new
+        ProductEntity product = productFactory.createNewFromRequest(request);
+
+        return productConverter.toResponseConverter(productRepository.save(product));
     }
 
     public List<ProductResponse> getAllProducts(){
-        List<ProductEntity> listProducts = productRepository.findAll();
-        return listProducts.stream()
-                .map(product -> productUtil.toProductResponse(product))
+        return productValidator.findAll().stream()
+                .map(productConverter::toResponseConverter)
                 .collect(Collectors.toList());
     }
 
     public ProductResponse getProduct(String id){
-        ProductEntity product = productRepository.findById(id).orElseThrow(()-> new AppException(ECProductsStorage.NONEXISTENT_PRODUCT_ID));
-        return productUtil.toProductResponse(product);
+        ProductEntity product = productValidator.findById(id);
+        return productConverter.toResponseConverter(product);
     }
 
-    public ProductResponse updateProduct(String id, ProductUpdateRequest request){
-        ProductEntity product = productRepository.findById(id).orElseThrow(() -> new AppException(ECProductsStorage.NONEXISTENT_PRODUCT_ID));
-
-        product.setId(request.getId());
-        product.setUnitPrice(request.getUnitPrice());
-        product.setName(request.getName());
-        product.setUnit(request.getUnit());
-
-        return productUtil.toProductResponse(product);
+    public ProductResponse updateProduct(String id, ProductRequest request){
+        ProductEntity product = productFactory.updateById(id, request);
+        return productConverter.toResponseConverter(product);
     }
 
     public Void deleteProduct(String id){
-        ProductEntity product = productRepository.findById(id).orElseThrow(() ->new AppException(ECProductsStorage.NONEXISTENT_PRODUCT_ID));
-        product.setDeleted(true);
-        product.setDeletedDate(LocalDate.now());
-        productRepository.save(product);
+        productFactory.deleteById(id);
         return null;
     }
 }

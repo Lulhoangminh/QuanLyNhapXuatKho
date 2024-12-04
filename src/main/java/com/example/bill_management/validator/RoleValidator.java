@@ -9,9 +9,15 @@ import org.springframework.stereotype.Component;
 
 @Component
 
-public class RoleValidator implements EntityValidator<Long>{
+public class RoleValidator implements EntityValidator<Long, RoleEntity>{
     @Autowired
     private RoleRepository roleRepository;
+
+    @Override
+    public RoleEntity findById(Long entityId) {
+        return roleRepository.findById(entityId)
+                .orElseThrow(() -> new AppException(ECRole.NONEXISTENT_ROLE));
+    }
 
     @Override
     public void validateExistenceById(Long entityId) {

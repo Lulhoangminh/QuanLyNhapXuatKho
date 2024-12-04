@@ -3,26 +3,18 @@ package com.example.bill_management.services;
 import com.example.bill_management.dto.requests.ProductRequest;
 import com.example.bill_management.dto.responses.ProductResponse;
 import com.example.bill_management.entities.ProductEntity;
-import com.example.bill_management.exceptions.AppException;
-import com.example.bill_management.exceptions.ECProductsStorage;
 import com.example.bill_management.repositories.ProductRepository;
 import com.example.bill_management.services.factory.ProductFactory;
-import com.example.bill_management.util.ProductUtil;
 import com.example.bill_management.util.converter.ProductConverter;
 import com.example.bill_management.validator.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private ProductUtil productUtil;
     @Autowired
     private ProductValidator productValidator;
     @Autowired
@@ -37,7 +29,7 @@ public class ProductService {
         // create if new
         ProductEntity product = productFactory.createNewFromRequest(request);
 
-        return productConverter.toResponseConverter(productRepository.save(product));
+        return productConverter.toResponseConverter(product);
     }
 
     public List<ProductResponse> getAllProducts(){

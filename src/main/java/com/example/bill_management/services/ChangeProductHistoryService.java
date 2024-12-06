@@ -6,8 +6,10 @@ import com.example.bill_management.repositories.ChangeProductHistoryRepository;
 import com.example.bill_management.repositories.ProductRepository;
 import com.example.bill_management.repositories.StorageRepository;
 import com.example.bill_management.util.ChangeProductHistoryUtil;
+import com.example.bill_management.validator.StorageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ChangeProductHistoryService {
@@ -19,13 +21,18 @@ public class ChangeProductHistoryService {
     private StorageRepository storageRepository;
     @Autowired
     private ChangeProductHistoryUtil changeProductHistoryUtil;
+    @Autowired
+    private StorageValidator storageValidator;
+
+    @Transactional
     public void saveProductHistory(ChangeProductHistoryRequest request){
         ChangeProductHistoryEntity changeProductHistoryEntity = changeProductHistoryRepository.findChangeInQuantityToday(
                 request.getStorageId(),
                 request.getProductId(),
                 request.getType(),
                 request.getCreatedDate()).orElse(new ChangeProductHistoryEntity());
-        if (changeProductHistoryEntity.getProductId() != null && changeProductHistoryEntity.getStorageId() != null){
+
+        if (!storageValidator.isProductInStorage(changeProductHistoryEntity.getStorageId(), changeProductHistoryEntity.getProductId())){
             if (!changeProductHistoryEntity.getType().equals("UPDATE")){
                 changeProductHistoryEntity.addAmount(request.getAmount());
             }

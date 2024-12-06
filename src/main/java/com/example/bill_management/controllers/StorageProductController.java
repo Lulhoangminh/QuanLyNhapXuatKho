@@ -21,7 +21,7 @@ public class StorageProductController {
 
     // add
     @PostMapping("/storages/{storageId}/products")
-    ApiResponse<StorageProductResponse> addProductToStorage(@PathVariable("storageId") Long storageId, @RequestBody AddProductToStorageRequest request){
+    ApiResponse<StorageProductResponse> addProductToStorage(@PathVariable("storageId") Long storageId, @RequestBody UpdateAmountRequest request){
         return ApiResponse.<StorageProductResponse>builder()
                 .result(storageProductService.addProductToStorage(storageId, request))
                 .build();
@@ -34,13 +34,13 @@ public class StorageProductController {
                 .build();
     }
 
-    // Add quantity to inventory
-    @PostMapping("/storages/{storageId}/products/{productId}/add")
-    ApiResponse<StorageProductResponse> addInventoryProductToStorage(@PathVariable("storageId") Long storageId, @PathVariable("productId") String productId, @RequestBody UpdateAmountRequest request){
-        return ApiResponse.<StorageProductResponse> builder()
-                .result(storageProductService.addInventoryProductToStorage(storageId, productId, request))
-                .build();
-    }
+//    // Add quantity to inventory
+//    @PostMapping("/storages/{storageId}/products/{productId}/add")
+//    ApiResponse<StorageProductResponse> addInventoryProductToStorage(@PathVariable("storageId") Long storageId, @PathVariable("productId") String productId, @RequestBody UpdateAmountRequest request){
+//        return ApiResponse.<StorageProductResponse> builder()
+//                .result(storageProductService.addInventoryProductToStorage(storageId, productId, request))
+//                .build();
+//    }
 
     // Dispatch goods
     @PutMapping("/storages/{storageId}/products/{productId}/dispatch")
@@ -52,7 +52,7 @@ public class StorageProductController {
 
     // Update the inventory of the product in 1 storage
     @PutMapping("/storages/{storageId}/products/{productId}")
-    ApiResponse<StorageProductResponse> updateInventoryInStorage(@PathVariable("storageId") Long storageId, @PathVariable("productId") String productId, @RequestBody UpdateInventoryRequest request){
+    ApiResponse<StorageProductResponse> updateInventoryInStorage(@PathVariable("storageId") Long storageId, @PathVariable("productId") String productId, @RequestBody UpdateAmountRequest request){
         return ApiResponse.<StorageProductResponse>builder()
                 .result(storageProductService.updateInventoryInStorage(storageId, productId, request))
                 .build();

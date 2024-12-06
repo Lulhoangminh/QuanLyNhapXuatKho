@@ -10,5 +10,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Builder
 public class UpdateAmountRequest {
-    private Long amount;
+    private String productId;
+    private Long quantity;
 }

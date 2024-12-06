@@ -20,8 +20,6 @@ public class ApplicationInitialConfiguration {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private UserUtil userUtil;
-    @Autowired
     private UserFactory userFactory;
 
     // @PostConstruct: Annotation này đánh dấu phương thức initialize() để nó được gọi tự động ngay sau khi

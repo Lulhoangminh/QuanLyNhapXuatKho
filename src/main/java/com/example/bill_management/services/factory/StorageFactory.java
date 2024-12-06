@@ -1,10 +1,14 @@
 package com.example.bill_management.services.factory;
 
 import com.example.bill_management.dto.requests.StorageRequest;
+import com.example.bill_management.dto.requests.UpdateAmountRequest;
 import com.example.bill_management.entities.StorageEntity;
+import com.example.bill_management.entities.StorageProductEntity;
 import com.example.bill_management.exceptions.AppException;
 import com.example.bill_management.exceptions.ECProductsStorage;
+import com.example.bill_management.repositories.StorageProductRepository;
 import com.example.bill_management.repositories.StorageRepository;
+import com.example.bill_management.validator.ProductValidator;
 import com.example.bill_management.validator.StorageValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +21,10 @@ public class StorageFactory implements  EntityFactory<Long, StorageEntity, Stora
     private StorageRepository storageRepository;
     @Autowired
     private StorageValidator storageValidator;
+    @Autowired
+    private ProductValidator productValidator;
+    @Autowired
+    private StorageProductRepository storageProductRepository;
 
     @Override
     public StorageEntity createNewFromRequest(StorageRequest request) {
@@ -43,4 +51,36 @@ public class StorageFactory implements  EntityFactory<Long, StorageEntity, Stora
         storage.setDeletedDate(LocalDate.now());
         storageRepository.save(storage);
     }
+
+    public StorageProductEntity addQuantityToInventoryProduct(Long storageId, UpdateAmountRequest request){
+        // check quantity to add is correct
+        storageValidator.checkInputQuantityOfProduct(request.getQuantity());
+        StorageProductEntity storageProductEntity = storageValidator.findOrCreateNewIfExistenceByStorageAndProductId(storageId, request.getProductId());
+
+        // check is create new ?
+        if (storageValidator.isProductInStorage(storageProductEntity.getStorageId(), storageProductEntity.getProductId())){
+            storageProductEntity.setProductId(request.getProductId());
+            storageProductEntity.setStorageId(storageId);
+        }
+        // add quantity to inventory
+        storageProductEntity.addToInventory(request.getQuantity());
+        return storageProductEntity;
+    }
+
+    public StorageProductEntity dispatchProductFromStorage(Long storageId, String productId, UpdateAmountRequest request){
+        StorageProductEntity storageProduct = storageValidator.findByStorageAndProductId(storageId, productId);
+        storageProduct.dispatchProduct(request.getQuantity());
+        return storageProduct;
+    }
+
+    public StorageProductEntity updateInventoryProductFromStorage(Long storageId, String productId, UpdateAmountRequest request){
+        StorageProductEntity storageProduct = storageValidator.findByStorageAndProductId(storageId, productId);
+        storageProduct.setInventory(request.getQuantity());
+        return storageProduct;
+    }
+
+    public String nameOfStorage(Long id){
+        return storageValidator.findById(id).getName();
+    }
+
 }

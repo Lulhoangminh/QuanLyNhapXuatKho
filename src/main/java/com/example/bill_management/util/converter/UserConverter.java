@@ -4,7 +4,9 @@ import com.example.bill_management.dto.responses.UserResponse;
 import com.example.bill_management.entities.UserEntity;
 import com.example.bill_management.repositories.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserConverter implements EntityToResponseConverter<UserEntity, UserResponse> {
     @Autowired
     private UserRoleRepository userRoleRepository;

@@ -5,9 +5,11 @@ import com.example.bill_management.entities.ProductEntity;
 import com.example.bill_management.repositories.ProductRepository;
 import com.example.bill_management.validator.ProductValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+@Component
 public class ProductFactory implements EntityFactory <String, ProductEntity, ProductRequest>{
     @Autowired
     private ProductRepository productRepository;
@@ -45,5 +47,9 @@ public class ProductFactory implements EntityFactory <String, ProductEntity, Pro
         product.setUnit(request.getUnit());
 
         return productRepository.save(product);
+    }
+
+    public String nameOfProduct(String id){
+        return productValidator.findById(id).getName();
     }
 }
